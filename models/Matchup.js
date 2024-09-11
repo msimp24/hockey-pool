@@ -9,6 +9,10 @@ const matchupSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  time: {
+    type: String,
+    required: true,
+  },
   visitingTeam: {
     name: {
       type: String,
@@ -16,10 +20,8 @@ const matchupSchema = new mongoose.Schema({
     },
     score: {
       type: Number,
-      required: true,
       default: 0,
     },
-    required: true,
   },
   homeTeam: {
     name: {
@@ -28,10 +30,8 @@ const matchupSchema = new mongoose.Schema({
     },
     score: {
       type: Number,
-      required: true,
       default: 0,
     },
-    required: true,
   },
 })
 
