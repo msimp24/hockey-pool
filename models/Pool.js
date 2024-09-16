@@ -7,13 +7,20 @@ const poolSchema = new mongoose.Schema({
   },
   sport: {
     type: String,
-    default: 'Hockey',
   },
   startDate: {
     type: Date,
   },
   endData: {
     type: Date,
+  },
+  startingLives: {
+    type: Number,
+    required: true,
+  },
+  entryCode: {
+    type: String,
+    required: true,
   },
 })
 

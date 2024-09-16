@@ -9,10 +9,16 @@ const user_poolSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  teamName: {
+    type: String,
+    required: true,
+  },
+  weeklyPicks: {
+    type: [String],
+  },
   lives: {
     type: Number,
     required: true,
-    default: 2,
   },
 })
 

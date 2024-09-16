@@ -24,11 +24,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    teamName: {
-      type: String,
-      required: true,
-      maxLength: 30,
-    },
     role: {
       type: String,
       enum: ['user', 'admin'],

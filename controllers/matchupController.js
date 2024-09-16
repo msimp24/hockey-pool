@@ -1,43 +1,133 @@
 const Matchup = require('./../models/Matchup')
 
-const getMatchupData = async () => {
-  const response = await fetch(
-    'https://www.hockey-reference.com/leagues/NHL_2025_games.html'
-  )
-  const text = await response.text()
+// returns all matchups in the NHL 2024-2025 season
+const getAllMatchups = async (req, res) => {
+  try {
+    const matchups = await Matchup.find({})
 
-  const $ = cheerio.load(text)
-
-  const rowData = []
-
-  $('tbody > tr').each((index, element) => {
-    const date = $(element).find('th').text()
-    const visitingTeam = $(element).find('td:nth-child(3)').text()
-    const visitingScore = $(element).find('td:nth-child(4)').text()
-    const homeTeam = $(element).find('td:nth-child(5)').text()
-    const homeScore = $(element).find('td:nth-child(6)').text()
-
-    rowData.push({
-      gameId: index,
-      date: date,
-      visitingTeam: {
-        name: visitingTeam,
-        score: visitingScore,
-      },
-      homeTeam: {
-        name: homeTeam,
-        score: homeScore,
-      },
+    res.status(400).json({
+      status: 'success',
+      matchups,
     })
-  })
-  return rowData
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: err,
+    })
+  }
 }
-
-const addNewMatchUp = async (req, res) => {
-  const { gameNumber, date, visitingTeamName, homeTeamName } = req.body
+const getMatchupByGameNumber = async (req, res) => {
+  const gameNumber = req.params
 
   try {
-  } catch (err) {}
+    const match = await Matchup.find(gameNumber)
+
+    if (!match) {
+      res.status(500).json({
+        status: 'failed',
+        message: 'Cannot find a matchup with this game number',
+      })
+    }
+
+    res.status(200).json({
+      status: 'Success',
+      match,
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      gameNumber,
+    })
+  }
 }
 
-const getAllMatchups = async (req, res) => {}
+//update a matchup
+const updateMatch = async (req, res) => {
+  const { gameNumber, date, time, visitingTeam, homeTeam } = req.body
+
+  try {
+    const matchup = new Matchup({
+      gameNumber,
+      date,
+      time,
+      visitingTeam,
+      homeTeam,
+    })
+
+    const matchupUpdated = Matchup.updateOne(
+      {
+        gameNumber: gameNumber,
+      },
+      matchup
+    )
+
+    if (!matchupUpdated) {
+      return res.status(404).json({
+        message: 'Could not find an match with that game number',
+      })
+    }
+
+    res.status(200).json({
+      message: 'success',
+      data: {
+        matchup,
+      },
+    })
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    })
+  }
+}
+// adds a new matchup
+const addNewMatchup = async (req, res) => {
+  const matchData = req.body
+  try {
+    const match = await Matchup.create(matchData)
+
+    res.status(200).json({
+      message: 'Success',
+      data: match,
+    })
+  } catch (err) {
+    res.status(401).json({
+      status: 'failed',
+      message: err.message,
+    })
+  }
+}
+
+const deleteMatchup = async (req, res) => {
+  const gameNumber = req.params.gameNumber
+
+  try {
+    const match = await Matchup.deleteOne({
+      gameNumber: gameNumber,
+    })
+    if (match.deletedCount == 1) {
+      res.status(200).json({
+        status: 'Success',
+        message: `Document ${gameNumber} was successfully deleted`,
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        message: 'Could not find a document with that game number',
+      })
+    }
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: err,
+    })
+  }
+}
+
+module.exports = {
+  getAllMatchups,
+  getMatchupByGameNumber,
+  updateMatch,
+  addNewMatchup,
+  deleteMatchup,
+}
