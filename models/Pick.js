@@ -1,21 +1,23 @@
 const mongoose = require('mongoose')
 
 const pickSchema = new mongoose.Schema({
-  user_pool_id: {
-    type: String,
+  userPoolId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  matchup_id: {
-    type: String,
+  matchupId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   selectedTeam: {
     type: String,
-    required: true,
   },
   week: {
     type: Number,
     required: true,
+  },
+  isCorrect: {
+    type: Boolean,
   },
 })
 

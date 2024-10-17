@@ -1,6 +1,7 @@
 const express = require('express')
 const matchupController = require('../controllers/matchupController')
 const { authenticate } = require('../middlewares/authenticate')
+const { poolAccess } = require('./../middlewares/poolAccess')
 const router = express.Router()
 
 router
@@ -9,8 +10,12 @@ router
   .post(matchupController.addNewMatchup)
 
 router
-  .route('/:gameNumber')
-  .get(matchupController.getMatchupByGameNumber)
+  .route('/weekly/:year/:week')
+  .get(authenticate, poolAccess, matchupController.getWeeklyMatchups)
+
+router
+  .route('/:id')
+  .get(matchupController.getMatchupById)
   .patch(matchupController.updateMatch)
   .delete(matchupController.deleteMatchup)
 

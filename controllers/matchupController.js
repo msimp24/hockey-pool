@@ -1,13 +1,19 @@
 const Matchup = require('./../models/Matchup')
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
 
 // returns all matchups in the NHL 2024-2025 season
 const getAllMatchups = async (req, res) => {
   try {
     const matchups = await Matchup.find({})
 
+    const scrapedData = await getMatchupData()
+
+    const updatedMatchups = await updateMatchupScores(scrapedData)
+
     res.status(400).json({
       status: 'success',
-      matchups,
+      updateMatchups,
     })
   } catch (err) {
     res.status(500).json({
@@ -16,11 +22,11 @@ const getAllMatchups = async (req, res) => {
     })
   }
 }
-const getMatchupByGameNumber = async (req, res) => {
-  const gameNumber = req.params
+const getMatchupById = async (req, res) => {
+  const id = req.params.id
 
   try {
-    const match = await Matchup.find(gameNumber)
+    const match = await Matchup.findById(id)
 
     if (!match) {
       res.status(500).json({
@@ -36,7 +42,7 @@ const getMatchupByGameNumber = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       status: 'failed',
-      gameNumber,
+      id,
     })
   }
 }
@@ -88,7 +94,7 @@ const addNewMatchup = async (req, res) => {
 
     res.status(200).json({
       message: 'Success',
-      data: match,
+      match,
     })
   } catch (err) {
     res.status(401).json({
@@ -124,10 +130,78 @@ const deleteMatchup = async (req, res) => {
   }
 }
 
+const getWeeklyMatchups = async (req, res) => {
+  const year = Number(req.params.year)
+  const week = Number(req.params.week)
+  console.log(year, week)
+  try {
+    const match = await Matchup.aggregate([
+      {
+        $project: {
+          homeTeam: 1,
+          visitingTeam: 1,
+          date: 1,
+          year: {
+            $year: '$date',
+          },
+          week: {
+            $week: '$date',
+          },
+          dayOfWeek: {
+            $dayOfWeek: '$date',
+          },
+        },
+      },
+      {
+        $match: {
+          dayOfWeek: 7,
+          year: year,
+          week: week,
+        },
+      },
+      {
+        $sort: {
+          year: 1,
+          week: 1,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: '$year',
+            week: '$week',
+          },
+          saturdayMatchups: {
+            $push: '$$ROOT',
+          },
+        },
+      },
+    ])
+
+    if (!match) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Could not find any documents',
+      })
+    }
+
+    res.status(200).json({
+      status: 'success',
+      match,
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: err.message,
+    })
+  }
+}
+
 module.exports = {
   getAllMatchups,
-  getMatchupByGameNumber,
+  getMatchupById,
   updateMatch,
   addNewMatchup,
   deleteMatchup,
+  getWeeklyMatchups,
 }

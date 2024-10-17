@@ -13,6 +13,6 @@ mongoose
   .then(() => console.log('DB connection successful!'))
   .catch((err) => console.log(err))
 
-app.listen(8080 || process.env.PORT, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log('Listening on port 8080')
 })

@@ -5,6 +5,7 @@ const matchupSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+
   date: {
     type: Date,
     required: true,
@@ -20,7 +21,6 @@ const matchupSchema = new mongoose.Schema({
     },
     score: {
       type: Number,
-      default: 0,
     },
   },
   homeTeam: {
@@ -30,7 +30,6 @@ const matchupSchema = new mongoose.Schema({
     },
     score: {
       type: Number,
-      default: 0,
     },
   },
 })

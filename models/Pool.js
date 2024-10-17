@@ -8,12 +8,7 @@ const poolSchema = new mongoose.Schema({
   sport: {
     type: String,
   },
-  startDate: {
-    type: Date,
-  },
-  endData: {
-    type: Date,
-  },
+
   startingLives: {
     type: Number,
     required: true,

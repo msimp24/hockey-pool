@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 
 const user_poolSchema = new mongoose.Schema({
   userId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
-    type: String,
   },
   poolId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   teamName: {

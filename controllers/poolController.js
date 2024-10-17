@@ -3,21 +3,12 @@ const User_Pool = require('./../models/User_Pool')
 
 // creates a new pool
 const createNewPool = async (req, res) => {
-  const {
-    name,
-    sport,
-    startDate,
-    endDate,
-    teamName,
-    startingLives,
-    entryCode,
-  } = req.body
+  const { name, sport, teamName, startingLives, entryCode } = req.body
+
   try {
     const pool = new Pool({
       name,
       sport,
-      startDate,
-      endDate,
       startingLives,
       entryCode,
     })
