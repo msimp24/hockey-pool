@@ -47,6 +47,12 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.raw())
 
+app.use('/user', authRouter)
+app.use('/matchup', matchupRouter)
+app.use('/pool', poolRouter)
+app.use('/user-pool', userPoolRouter)
+app.use('/picks', picksRouter)
+
 app.get('/', (req, res) => {
   res.send('Welcome to my API!')
 })
@@ -56,15 +62,8 @@ app.use(express.static(path.join(__dirname, 'dist')))
 
 // Catch-all route for SPA
 app.get('*', (req, res) => {
-  console.log('test path')
-  console.log(path.join(__dirname, 'dist', 'index.html'))
+  console.log('Serving index.html for', req.url) // Debug log
   res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
-
-app.use('/user', authRouter)
-app.use('/matchup', matchupRouter)
-app.use('/pool', poolRouter)
-app.use('/user-pool', userPoolRouter)
-app.use('/picks', picksRouter)
 
 module.exports = app
