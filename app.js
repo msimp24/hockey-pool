@@ -46,6 +46,11 @@ app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 app.use(express.raw())
+app.use(
+  cors({
+    origin: 'https://hockey-pool-frontend.onrender.com', // Change to your actual frontend URL
+  })
+)
 
 app.use('/user', authRouter)
 app.use('/matchup', matchupRouter)
@@ -53,17 +58,14 @@ app.use('/pool', poolRouter)
 app.use('/user-pool', userPoolRouter)
 app.use('/picks', picksRouter)
 
-app.get('/', (req, res) => {
-  res.send('Welcome to my API!')
-})
-
-// Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')))
 
-// Catch-all route for SPA
 app.get('*', (req, res) => {
-  console.log('Serving index.html for', req.url) // Debug log
   res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
+
+app.get('/', (req, res) => {
+  res.send('Welcome to my API!')
 })
 
 module.exports = app
