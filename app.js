@@ -52,19 +52,15 @@ const poolRouter = require('./routes/poolRoute.js')
 const userPoolRouter = require('./routes/userPoolRoute.js')
 const picksRouter = require('./routes/picksRoute.js')
 
+app.use(express.static(path.join(__dirname, 'dist')))
+
 app.use('/user', authRouter)
 app.use('/matchup', matchupRouter)
 app.use('/pool', poolRouter)
 app.use('/user-pool', userPoolRouter)
 app.use('/picks', picksRouter)
 
-const distPath = path.join(path.resolve(), 'dist')
-
-// Serve static files from the dist directory
-app.use(express.static(distPath))
-
-// Handle all other routes to serve index.html for Vue Router (history mode)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'))
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 module.exports = app
