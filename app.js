@@ -45,8 +45,6 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.raw())
 
-app.use(express.static(path.join(__dirname, 'dist')))
-
 //import routes
 const authRouter = require('./routes/authRoute.js')
 const matchupRouter = require('./routes/matchupRoute.js')
@@ -60,7 +58,13 @@ app.use('/pool', poolRouter)
 app.use('/user-pool', userPoolRouter)
 app.use('/picks', picksRouter)
 
+const distPath = path.join(path.resolve(), 'dist')
+
+// Serve static files from the dist directory
+app.use(express.static(distPath))
+
+// Handle all other routes to serve index.html for Vue Router (history mode)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+  res.sendFile(path.join(distPath, 'index.html'))
 })
 module.exports = app
