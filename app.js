@@ -45,7 +45,7 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.raw())
 
-app.use(express.static(__dirname + '/dist'))
+app.use(express.static(path.join(__dirname, 'dist')))
 
 //import routes
 const authRouter = require('./routes/authRoute.js')
@@ -61,7 +61,6 @@ app.use('/user-pool', userPoolRouter)
 app.use('/picks', picksRouter)
 
 app.get('*', (req, res) => {
-  res.sendFile(__dirname + '/dist/index.html')
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
-
 module.exports = app
