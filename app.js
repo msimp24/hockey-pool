@@ -12,7 +12,7 @@ const {
 
 let week = 1
 
-cron.schedule('25 20 * * *', async () => {
+cron.schedule('0 5 * * 1', async () => {
   try {
     const scrapedData = await getMatchupData()
     await updateMatchupScores(scrapedData)
@@ -26,7 +26,7 @@ cron.schedule('0 5 * * 1', async () => {
     console.log('Running put request at 5 am Monday morning')
 
     const response = await axios.put(
-      `https://localhost:8080/picks/all-picks/${week}`
+      `https://hockey-pool-frontend.onrender.com/picks/all-picks/${week}`
     )
     console.log(response)
     week++
@@ -35,6 +35,18 @@ cron.schedule('0 5 * * 1', async () => {
   }
 })
 
+app.use(
+  cors({
+    origin: 'https://hockey-pool-frontend.onrender.com', // Change to your actual frontend URL
+  })
+)
+app.use(express.json())
+app.use(cors())
+app.use(morgan('dev'))
+app.use(express.raw())
+
+app.use(express.static(path.join(__dirname, 'dist')))
+
 //import routes
 const authRouter = require('./routes/authRoute.js')
 const matchupRouter = require('./routes/matchupRoute.js')
@@ -42,28 +54,14 @@ const poolRouter = require('./routes/poolRoute.js')
 const userPoolRouter = require('./routes/userPoolRoute.js')
 const picksRouter = require('./routes/picksRoute.js')
 
-app.use(express.json())
-app.use(cors())
-app.use(morgan('dev'))
-app.use(express.raw())
-app.use(
-  cors({
-    origin: 'https://hockey-pool-frontend.onrender.com', // Change to your actual frontend URL
-  })
-)
-
 app.use('/user', authRouter)
 app.use('/matchup', matchupRouter)
 app.use('/pool', poolRouter)
 app.use('/user-pool', userPoolRouter)
 app.use('/picks', picksRouter)
 
-app.use(express.static(path.join(__dirname, 'dist')))
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'))
-})
-app.get('/', (req, res) => {
-  res.send('Welcome to my API!')
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
 module.exports = app
