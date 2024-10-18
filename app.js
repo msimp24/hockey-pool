@@ -46,6 +46,10 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.raw())
 
+app.get('/', (req, res) => {
+  res.send('Welcome to my API!')
+})
+
 app.use('/user', authRouter)
 app.use('/matchup', matchupRouter)
 app.use('/pool', poolRouter)
