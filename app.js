@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const cron = require('node-cron')
 const axios = require('axios')
+const path = require('path')
 const {
   getMatchupData,
   updateMatchupScores,
@@ -48,6 +49,14 @@ app.use(express.raw())
 
 app.get('/', (req, res) => {
   res.send('Welcome to my API!')
+})
+
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, 'dist')))
+
+// Catch-all route for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
 app.use('/user', authRouter)
