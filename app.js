@@ -56,6 +56,7 @@ app.use(express.static(path.join(__dirname, 'dist')))
 
 // Catch-all route for SPA
 app.get('*', (req, res) => {
+  console.log('test path')
   res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
