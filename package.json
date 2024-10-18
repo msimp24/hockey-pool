@@ -4,7 +4,8 @@
   "description": "Backend for elimination hockey pool",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "Mark Simpson",
   "license": "MIT",
