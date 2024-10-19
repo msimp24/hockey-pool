@@ -34,8 +34,23 @@ cron.schedule('0 6 * * 0', async () => {
     console.log('Error with the PUT')
   }
 })
+app.use((req, res, next) => {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} request for ${req.url}`
+  )
+  next()
+})
+
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')))
-//app.use(express.static(path.join(__dirname, 'dist')))
+
+// Serve static files from the 'dist' directory (if applicable)
+app.use(express.static(path.join(__dirname, 'dist')))
+
+// Redirect all other routes to index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
 
 app.use(
   cors(
@@ -61,7 +76,4 @@ app.use('/pool', poolRouter)
 app.use('/user-pool', userPoolRouter)
 app.use('/picks', picksRouter)
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-})
 module.exports = app
