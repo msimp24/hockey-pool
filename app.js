@@ -38,10 +38,11 @@ cron.schedule('0 5 * * 1', async () => {
 app.use(
   cors({
     origin: 'https://hockey-pool-frontend.onrender.com', // Change to your actual frontend URL
+    // origin: 'http://localhost:8080',
+    credentials: true,
   })
 )
 app.use(express.json())
-app.use(cors())
 app.use(morgan('dev'))
 app.use(express.raw())
 
