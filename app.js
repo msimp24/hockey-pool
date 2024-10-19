@@ -10,7 +10,7 @@ const {
   updateMatchupScores,
 } = require('./jobs/updateMatchupsJob.js')
 
-let week = 1
+let week = 2
 
 cron.schedule('0 6 * * 0', async () => {
   try {
