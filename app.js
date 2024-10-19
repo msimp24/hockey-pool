@@ -12,7 +12,7 @@ const {
 
 let week = 1
 
-cron.schedule('0 5 * * 1', async () => {
+cron.schedule('0 6 * * 0', async () => {
   try {
     const scrapedData = await getMatchupData()
     await updateMatchupScores(scrapedData)
@@ -21,7 +21,7 @@ cron.schedule('0 5 * * 1', async () => {
   }
 })
 
-cron.schedule('0 5 * * 1', async () => {
+cron.schedule('0 6 * * 0', async () => {
   try {
     console.log('Running put request at 5 am Monday morning')
 
@@ -34,14 +34,16 @@ cron.schedule('0 5 * * 1', async () => {
     console.log('Error with the PUT')
   }
 })
+app.use(express.static(path.join(__dirname, 'public')))
+//app.use(express.static(path.join(__dirname, 'dist')))
 
 app.use(
-  cors({
-    origin: 'https://hockey-pool-frontend.onrender.com', // Change to your actual frontend URL
-    credentials: true,
-  })
+  cors(
+    process.env.FRONTEND_URL || 'https://hockey-pool-frontend.onrender.com' // Use an environment variable for the frontend URL
+  )
 )
 //app.use(cors())
+
 app.use(express.json())
 app.use(morgan('dev'))
 app.use(express.raw())
@@ -52,8 +54,6 @@ const matchupRouter = require('./routes/matchupRoute.js')
 const poolRouter = require('./routes/poolRoute.js')
 const userPoolRouter = require('./routes/userPoolRoute.js')
 const picksRouter = require('./routes/picksRoute.js')
-
-app.use(express.static(path.join(__dirname, 'dist')))
 
 app.use('/user', authRouter)
 app.use('/matchup', matchupRouter)
