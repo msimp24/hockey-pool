@@ -12,9 +12,9 @@ const {
 
 const { updatePicks } = require('./jobs/updateUserPoolJobs.js')
 
-let week = 2
+let week = 3
 
-cron.schedule('0 13 21 10 *', async () => {
+cron.schedule('0 5 * * 0', async () => {
   try {
     const scrapedData = await getMatchupData()
     await updateMatchupScores(scrapedData)
@@ -23,7 +23,7 @@ cron.schedule('0 13 21 10 *', async () => {
   }
 })
 
-cron.schedule('59 14 * * *', async () => {
+cron.schedule('0 6 * * 0', async () => {
   try {
     const response = await updatePicks(week)
     week++
