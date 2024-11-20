@@ -187,4 +187,43 @@ const updatePicksPerWeek = async (req, res) => {
   }
 }
 
-module.exports = { makePick, getPickByWeek, updatePicksPerWeek }
+const getWeeklyPicksAndResults = async (req, res) => {
+  try {
+    const results = await Pick.aggregate([
+      {
+        $lookup: {
+          from: 'user_pools',
+          localField: 'userPoolId',
+          foreignField: '_id',
+          as: 'pick',
+        },
+      },
+      { $unwind: { path: '$pick' } },
+      {
+        $project: {
+          selectedTeam: 1,
+          week: 1,
+          pick: 1,
+          isCorrect: 1,
+        },
+      },
+    ])
+
+    res.status(200).json({
+      status: 'success',
+      results,
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'failed',
+      message: err.message,
+    })
+  }
+}
+
+module.exports = {
+  makePick,
+  getPickByWeek,
+  updatePicksPerWeek,
+  getWeeklyPicksAndResults,
+}

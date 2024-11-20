@@ -15,5 +15,8 @@ router
 router
   .route('/:id/pick')
   .post(authenticate, poolAccess, picksController.makePick)
+router
+  .route('/weekly-picks')
+  .get(authenticate, poolAccess, picksController.getWeeklyPicksAndResults)
 
 module.exports = router
