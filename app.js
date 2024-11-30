@@ -13,7 +13,7 @@ const {
 const { updatePicks } = require('./jobs/updateUserPoolJobs.js')
 
 let week = 8
-
+/*
 cron.schedule('0 6 * * 0', async () => {
   try {
     const scrapedData = await getMatchupData()
@@ -22,8 +22,8 @@ cron.schedule('0 6 * * 0', async () => {
     console.error('Error running cron job:', err)
   }
 })
-
-cron.schedule('0 7 * * 0', async () => {
+*/
+/*cron.schedule('0 7 * * 0', async () => {
   try {
     const response = await updatePicks(week)
     week++
@@ -31,7 +31,7 @@ cron.schedule('0 7 * * 0', async () => {
     console.log('Error with the PUT')
   }
 })
-
+*/
 app.use(
   cors(
     process.env.FRONTEND_URL || 'https://hockey-pool-frontend.onrender.com' // Use an environment variable for the frontend URL
